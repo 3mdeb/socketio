@@ -6,10 +6,10 @@ import (
 )
 
 const (
-	db1 = false
+	db1 = true
 )
 
 var (
-	DbLogMessage = false
+	DbLogMessage  = true
 	LogMessage, _ = strconv.ParseBool(os.Getenv("SOCKETIO_LOG_MESSAGE"))
 )
