@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/3mdeb/socketio/engineio"
-	"github.com/sirupsen/logrus"
 	"github.com/pschlump/godebug"
+	"github.com/sirupsen/logrus"
 )
 
 // Socket is the socket object of socket.io.
@@ -123,6 +123,10 @@ func (s *socket) loop() error {
 		decoder := newDecoder(s.conn)
 		var p packet
 		if err := decoder.Decode(&p); err != nil {
+			if LogMessage {
+				logrus.Infof("Socket loop func: unable to decode packet p.")
+				logrus.Infof("Packet info: Type [%d], Id [%d], NSP [%s]", p.Type, p.Id, p.NSP)
+			}
 			return err
 		}
 		ret, err := s.socketHandler.onPacket(decoder, &p)
