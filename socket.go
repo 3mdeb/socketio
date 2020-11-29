@@ -122,12 +122,18 @@ func (s *socket) loop() error {
 	for {
 		decoder := newDecoder(s.conn)
 		var p packet
+		if LogMessage {
+			logrus.Infof("Debug log in for loop of the socket.go loop function")
+		}
 		if err := decoder.Decode(&p); err != nil {
 			if LogMessage {
 				logrus.Infof("Socket loop func: unable to decode packet p.")
 				logrus.Infof("Packet info: Type [%d], Id [%d], NSP [%s]", p.Type, p.Id, p.NSP)
 			}
 			return err
+		}
+		if LogMessage {
+			logrus.Infof("Debug log in for loop of the socket.go loop function, after decode")
 		}
 		ret, err := s.socketHandler.onPacket(decoder, &p)
 		if err != nil {
