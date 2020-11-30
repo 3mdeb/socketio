@@ -160,6 +160,8 @@ func (s *socket) loop() error {
 			}
 		case _DISCONNECT:
 			return nil
+		default:
+			logrus.Infof("Default socket loop case")
 		}
 	}
 }

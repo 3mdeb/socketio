@@ -301,6 +301,8 @@ func (d *decoder) Decode(v *packet) error {
 	case _BINARY_ACK:
 		d.current = reader
 		d.currentCloser = r
+	default:
+		logrus.Infof("Default case")
 	}
 	return nil
 }
