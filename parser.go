@@ -173,6 +173,10 @@ func (d *decoder) Decode(v *packet) error {
 	}
 	ty, r, err := d.reader.NextReader()
 	if err != nil {
+		if LogMessage {
+			logrus.Infof("Inside NextReader")
+			logrus.Infof("ty:[%d] r:[] err:[%s] ", ty, r, err.Error())
+		}
 		return err
 	}
 	if LogMessage {
