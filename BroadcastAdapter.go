@@ -1,6 +1,11 @@
 package socketio
 
-import "sync"
+import (
+	"sync"
+
+	"github.com/pschlump/godebug"
+	"github.com/sirupsen/logrus"
+)
 
 // BroadcastAdaptor is the adaptor to handle broadcast.
 type BroadcastAdaptor interface {
@@ -70,6 +75,9 @@ func (b *broadcast) Send(ignore Socket, room, message string, args ...interface{
 			continue
 		}
 		s.Emit(message, args...)
+		if LogMessage {
+			logrus.Infof("OUT Message from BROADCAST [%s] Arguments %s", message, godebug.SVar(args))
+		}
 	}
 	return nil
 }

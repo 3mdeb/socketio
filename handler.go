@@ -5,8 +5,8 @@ import (
 	"reflect"
 	"sync"
 
-	"github.com/sirupsen/logrus"
 	"github.com/pschlump/godebug"
+	"github.com/sirupsen/logrus"
 )
 
 // PJS - could have it return more than just an error, if "rmsg" and "rbody" - then emit response?
@@ -114,6 +114,9 @@ func newSocketHandler(s *socket, base *baseHandler) *socketHandler {
 }
 
 func (h *socketHandler) Emit(message string, args ...interface{}) error {
+	if LogMessage {
+		logrus.Infof("OUT Message from HANDLER [%s] Arguments %s", message, godebug.SVar(args))
+	}
 	var c *caller
 	if l := len(args); l > 0 {
 		fv := reflect.ValueOf(args[l-1])
