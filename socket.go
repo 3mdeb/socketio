@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/3mdeb/socketio/engineio"
-	"github.com/sirupsen/logrus"
 	"github.com/pschlump/godebug"
+	"github.com/sirupsen/logrus"
 )
 
 // Socket is the socket object of socket.io.
@@ -101,15 +101,6 @@ func (s *socket) sendId(args []interface{}) (int, error) {
 }
 
 func (s *socket) loop() error {
-	defer func() {
-		s.LeaveAll()
-		p := packet{
-			Type: _DISCONNECT,
-			Id:   -1,
-		}
-		s.socketHandler.onPacket(nil, &p)
-	}()
-
 	p := packet{
 		Type: _CONNECT,
 		Id:   -1,
@@ -122,8 +113,22 @@ func (s *socket) loop() error {
 	for {
 		decoder := newDecoder(s.conn)
 		var p packet
+		if LogMessage {
+			logrus.Infof("Debug log in for loop of the socket.go loop function")
+		}
 		if err := decoder.Decode(&p); err != nil {
+			if LogMessage {
+				logrus.Infof("Socket loop func: unable to decode packet p.")
+				logrus.Infof("Packet info: Type [%d], Id [%d], NSP [%s]", p.Type, p.Id, p.NSP)
+			}
 			return err
+		}
+		//		if err == io.EOF {
+		//			logrus.Infof("Err [%s]", err.Error())
+		//			p.Type = _ERROR
+		//		}
+		if LogMessage {
+			logrus.Infof("Debug log in for loop of the socket.go loop function, after decode")
 		}
 		ret, err := s.socketHandler.onPacket(decoder, &p)
 		if err != nil {
@@ -150,6 +155,8 @@ func (s *socket) loop() error {
 			}
 		case _DISCONNECT:
 			return nil
+		default:
+			logrus.Infof("Default socket loop case")
 		}
 	}
 }

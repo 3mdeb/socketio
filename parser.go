@@ -8,8 +8,9 @@ import (
 	"io/ioutil"
 	"strconv"
 
-	"github.com/pschlump/json" //	"encoding/json"
 	"github.com/3mdeb/socketio/engineio"
+	"github.com/pschlump/json" //	"encoding/json"
+	"github.com/sirupsen/logrus"
 )
 
 const Protocol = 4
@@ -166,10 +167,19 @@ func (d *decoder) Close() {
 }
 
 func (d *decoder) Decode(v *packet) error {
+	if LogMessage {
+		logrus.Infof("Debug log Decode function, parser.go file")
+	}
 	ty, r, err := d.reader.NextReader()
 	if err != nil {
-		return err
+		if LogMessage {
+			logrus.Infof("Inside NextReader")
+			logrus.Infof("ty:[%d]", ty)
+			logrus.Infof("err:[%s]", err.Error())
+			return err
+		}
 	}
+
 	if d.current != nil {
 		d.Close()
 	}
@@ -182,6 +192,9 @@ func (d *decoder) Decode(v *packet) error {
 	if ty != engineio.MessageText {
 		return fmt.Errorf("need text package")
 	}
+	if LogMessage {
+		logrus.Infof("After MessageText")
+	}
 	reader := bufio.NewReader(r)
 
 	v.Id = -1
@@ -189,6 +202,9 @@ func (d *decoder) Decode(v *packet) error {
 	t, err := reader.ReadByte()
 	if err != nil {
 		return err
+	}
+	if LogMessage {
+		logrus.Infof("After ReadByte")
 	}
 	v.Type = packetType(t - '0')
 
@@ -214,6 +230,9 @@ func (d *decoder) Decode(v *packet) error {
 	}
 	if err != nil {
 		return err
+	}
+	if LogMessage {
+		logrus.Infof("After Peek")
 	}
 	if len(next) == 0 {
 		return fmt.Errorf("invalid packet")
@@ -284,6 +303,8 @@ func (d *decoder) Decode(v *packet) error {
 	case _BINARY_ACK:
 		d.current = reader
 		d.currentCloser = r
+	default:
+		logrus.Infof("Default case")
 	}
 	return nil
 }
