@@ -101,15 +101,6 @@ func (s *socket) sendId(args []interface{}) (int, error) {
 }
 
 func (s *socket) loop() error {
-	defer func() {
-		s.LeaveAll()
-		p := packet{
-			Type: _DISCONNECT,
-			Id:   -1,
-		}
-		s.socketHandler.onPacket(nil, &p)
-	}()
-
 	p := packet{
 		Type: _CONNECT,
 		Id:   -1,
@@ -132,6 +123,10 @@ func (s *socket) loop() error {
 			}
 			return err
 		}
+		//		if err == io.EOF {
+		//			logrus.Infof("Err [%s]", err.Error())
+		//			p.Type = _ERROR
+		//		}
 		if LogMessage {
 			logrus.Infof("Debug log in for loop of the socket.go loop function, after decode")
 		}

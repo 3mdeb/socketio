@@ -169,19 +169,17 @@ func (d *decoder) Close() {
 func (d *decoder) Decode(v *packet) error {
 	if LogMessage {
 		logrus.Infof("Debug log Decode function, parser.go file")
-		logrus.Infof("Received package v: Type[%d], Id[%d], NSP[%s] ", v.Type, v.Id, v.NSP)
 	}
 	ty, r, err := d.reader.NextReader()
 	if err != nil {
 		if LogMessage {
 			logrus.Infof("Inside NextReader")
-			logrus.Infof("ty:[%d] r:[] err:[%s] ", ty, r, err.Error())
+			logrus.Infof("ty:[%d]", ty)
+			logrus.Infof("err:[%s]", err.Error())
+			return err
 		}
-		return err
 	}
-	if LogMessage {
-		logrus.Infof("After NextReader")
-	}
+
 	if d.current != nil {
 		d.Close()
 	}
