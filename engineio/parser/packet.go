@@ -7,6 +7,7 @@ import (
 	"sync"
 
 	"github.com/3mdeb/socketio/engineio/message"
+	"github.com/sirupsen/logrus"
 )
 
 var WriterLocker sync.RWMutex
@@ -164,6 +165,7 @@ func NewDecoder(r io.Reader) (*PacketDecoder, error) {
 	if err != nil {
 		return nil, err
 	}
+	logrus.Infof("ByteToType [%s] ", t)
 	ret := &PacketDecoder{
 		closer:  closer,
 		r:       r,
