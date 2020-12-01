@@ -77,6 +77,7 @@ func NewStringEncoder(w io.Writer, t PacketType) (*PacketEncoder, error) {
 
 // NewBinaryEncoder return the encoder which encode type t to writer w, as binary.
 func NewBinaryEncoder(w io.Writer, t PacketType) (*PacketEncoder, error) {
+	logrus.Infof("Get new byte to encode [%d] ", t.Byte())
 	return newEncoder(w, t.Byte())
 }
 
