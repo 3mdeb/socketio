@@ -82,6 +82,7 @@ func NewBinaryEncoder(w io.Writer, t PacketType) (*PacketEncoder, error) {
 }
 
 func newEncoder(w io.Writer, t byte) (*PacketEncoder, error) {
+	logrus.Infof("newEncoder: Get new byte to encode [%d] ", t)
 	if _, err := w.Write([]byte{t}); err != nil {
 		return nil, err
 	}
